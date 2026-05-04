@@ -15,7 +15,6 @@ import { getLures } from "../src/storage/lureStorage";
 import { globalStyles } from "../src/styles";
 import { normalizeImage } from "../src/utils/normalizeImage";
 
-
 export default function Result() {
   const params = useLocalSearchParams();
   const [top3, setTop3] = useState(null);
@@ -140,7 +139,29 @@ export default function Result() {
             </Text>
 
             {top3.map((item, index) => (
-              <View key={item.lure.id} style={{ marginVertical: 10 }}>
+              <View
+                key={item.lure.id}
+                style={{
+                  marginVertical: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
+                {/* Kuva */}
+                {item.lure.imageUri && (
+                  <Image
+                    source={normalizeImage(item.lure.imageUri)}
+                    style={{
+                      width: 60,
+                      height: 60,
+                      borderRadius: 8,
+                      backgroundColor: "#ddd",
+                    }}
+                  />
+                )}
+
+                {/* Teksti */}
                 <Text style={[globalStyles.text, { color: "#000" }]}>
                   {index + 1}. {item.lure.name} — {item.score} pistettä
                 </Text>
