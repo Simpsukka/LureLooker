@@ -7,19 +7,21 @@ import {
   ImageBackground,
   ScrollView,
   Text,
-  View
+  View,
 } from "react-native";
 
 import { scoreLure } from "../src/logic/scoring";
 import { getLures } from "../src/storage/lureStorage";
 import { globalStyles } from "../src/styles";
+import { normalizeImage } from "../src/utils/normalizeImage";
+
 
 export default function Result() {
   const params = useLocalSearchParams();
   const [top3, setTop3] = useState(null);
 
   useEffect(() => {
-    async function run() {
+    async function calculateResults() {
       const lures = await getLures();
 
       if (!lures || lures.length === 0) {
@@ -27,6 +29,7 @@ export default function Result() {
         return;
       }
 
+      // Laske pisteet jokaiselle uistimelle
       const scored = lures.map((lure) => {
         const { score } = scoreLure(
           lure,
@@ -34,12 +37,13 @@ export default function Result() {
           params.waterColor || null,
           params.weather || null
         );
-
         return { lure, score };
       });
 
+      // Järjestä parhaat
       const sorted = scored.sort((a, b) => b.score - a.score);
       const bestThree = sorted.slice(0, 3);
+
       setTop3(bestThree);
 
       if (bestThree.length > 0) {
@@ -47,15 +51,18 @@ export default function Result() {
       }
     }
 
-    run();
+    calculateResults();
   }, []);
 
+  // Ei löytynyt yhtään sopivaa uistinta
   if (!top3 || top3.length === 0) {
     return (
       <ImageBackground
         source={require("../assets/images/sea.jpg")}
         style={globalStyles.backgroundImage}
       >
+        <View style={globalStyles.backgroundOverlay} pointerEvents="none" />
+
         <View style={globalStyles.topRightIcon}>
           <Ionicons
             name="arrow-forward-circle-outline"
@@ -89,6 +96,9 @@ export default function Result() {
       source={require("../assets/images/sea.jpg")}
       style={globalStyles.backgroundImage}
     >
+      <View style={globalStyles.backgroundOverlay} pointerEvents="none" />
+
+      {/* Takaisin */}
       <View style={globalStyles.topRightIcon}>
         <Ionicons
           name="arrow-forward-circle-outline"
@@ -99,8 +109,6 @@ export default function Result() {
       </View>
 
       <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
-
-        {/* VALEA BOXI */}
         <View
           style={{
             backgroundColor: "rgba(255,255,255,0.85)",
@@ -109,7 +117,6 @@ export default function Result() {
             marginBottom: 30,
           }}
         >
-
           {/* Paras uistin */}
           <Text style={[globalStyles.title, { color: "#000" }]}>
             Paras uistin: {best.lure.name}
@@ -117,11 +124,7 @@ export default function Result() {
 
           {best.lure.imageUri && (
             <Image
-              source={
-                typeof best.lure.imageUri === "string"
-                  ? { uri: best.lure.imageUri }
-                  : best.lure.imageUri
-              }
+              source={normalizeImage(best.lure.imageUri)}
               style={globalStyles.image}
             />
           )}
@@ -144,10 +147,7 @@ export default function Result() {
               </View>
             ))}
           </View>
-
         </View>
-        {/* ⭐ BOX LOPPUU */}
-
       </ScrollView>
     </ImageBackground>
   );

@@ -3,7 +3,10 @@ import { TEST_LURES } from "../data/TEST_LURES";
 
 const LURES_KEY = "lures";
 
-// Apufunktiot JSON-datan tallennukseen
+/* ---------------------------------------------------
+   1. JSON-apufunktiot
+--------------------------------------------------- */
+
 async function saveJSON(key, value) {
   try {
     await SecureStore.setItemAsync(key, JSON.stringify(value));
@@ -22,33 +25,42 @@ async function loadJSON(key) {
   }
 }
 
-// Puhdistetaan uistin vain sallittuihin kenttiin
+/* ---------------------------------------------------
+   2. cleanLure — varmistaa datan oikean muodon
+--------------------------------------------------- */
+
 function cleanLure(l) {
   return {
-    id: l.id,
-    name: l.name,
+    id: String(l.id),
+    name: l.name || "",
     imageUri: l.imageUri || null,
-    type: l.type || "",
+    type: Array.isArray(l.type) ? l.type : [],
     color: Array.isArray(l.color) ? l.color : [],
     targetFish: Array.isArray(l.targetFish) ? l.targetFish : [],
     waterTypes: Array.isArray(l.waterTypes) ? l.waterTypes : [],
   };
 }
 
-// Hae kaikki uistimet
+/* ---------------------------------------------------
+   3. getLures — lataa tallennetut uistimet
+--------------------------------------------------- */
+
 export async function getLures() {
-  // 1) Yritä ladata tallennettu data
   const stored = await loadJSON(LURES_KEY);
 
-  if (stored && Array.isArray(stored) && stored.length > 0) {
+  // Jos tallennettua dataa löytyy → käytä sitä
+  if (Array.isArray(stored) && stored.length > 0) {
     return stored.map(cleanLure);
   }
 
-  // 2) Jos ei ole tallennettua dataa → käytä TEST_LURES
+  // Muuten käytetään TEST_LURES
   return TEST_LURES.map(cleanLure);
 }
 
-// Tallenna koko lista
+/* ---------------------------------------------------
+   4. saveLures — tallentaa koko listan
+--------------------------------------------------- */
+
 export async function saveLures(lures) {
   try {
     const cleaned = lures.map(cleanLure);
@@ -58,11 +70,14 @@ export async function saveLures(lures) {
   }
 }
 
-// Poista uistin
+/* ---------------------------------------------------
+   5. deleteLure — poistaa yhden uistimen
+--------------------------------------------------- */
+
 export async function deleteLure(id) {
   try {
     const lures = await getLures();
-    const filtered = lures.filter((l) => l.id !== id);
+    const filtered = lures.filter((l) => String(l.id) !== String(id));
     await saveLures(filtered);
   } catch (e) {
     console.warn("Error deleting lure", e);

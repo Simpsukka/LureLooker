@@ -1,14 +1,15 @@
 import { Pressable, Text, View } from "react-native";
 
-export default function MultiSelectPicker({ title, options, values, onChange }) {
-  function toggle(item) {
-    if (values.includes(item)) {
-      onChange(values.filter((v) => v !== item));
-    } else {
-      onChange([...values, item]);
-    }
+// Yhteinen toggle-funktio (sama kuin ColorPickerissä)
+function toggleValue(list, value, onChange) {
+  if (list.includes(value)) {
+    onChange(list.filter((v) => v !== value));
+  } else {
+    onChange([...list, value]);
   }
+}
 
+export default function MultiSelectPicker({ title, options, values, onChange }) {
   return (
     <View style={{ marginVertical: 10 }}>
       <Text style={{ fontSize: 16, marginBottom: 6 }}>{title}</Text>
@@ -20,7 +21,7 @@ export default function MultiSelectPicker({ title, options, values, onChange }) 
           return (
             <Pressable
               key={item}
-              onPress={() => toggle(item)}
+              onPress={() => toggleValue(values, item, onChange)}
               style={{
                 paddingVertical: 6,
                 paddingHorizontal: 10,

@@ -16,12 +16,17 @@ import { globalStyles } from "../src/styles";
 
 // Valintalistat
 const WATER_COLOR_OPTIONS = ["kirkas", "samea", "ruskea"];
-const FISH_OPTIONS = ["hauki", "ahven", "kuha", "lohi"];
+const FISH_OPTIONS = ["hauki", "ahven", "kuha", "lohi", "taimen"];
 const WEATHER_OPTIONS = ["aurinkoinen", "pilvinen", "sateinen"];
 const WATER_TYPE_OPTIONS = ["lampi", "järvi", "joki", "meri"];
 
+// Yksivalintaisen MultiSelectPickerin apufunktio
+function selectSingle(valueList, setter) {
+  const last = valueList[valueList.length - 1];
+  setter(last ? [last] : []);
+}
+
 export default function Conditions() {
-  // Yksivalintaiset listat (MultiSelectPicker antaa listan)
   const [waterColor, setWaterColor] = useState([]);
   const [targetFish, setTargetFish] = useState([]);
   const [weather, setWeather] = useState([]);
@@ -44,13 +49,13 @@ export default function Conditions() {
     const { latitude, longitude } = loc.coords;
     const data = await getWeatherByCoords(latitude, longitude);
 
-    const w = data.weather?.[0]?.main?.toLowerCase() || "";
-    const t = data.main?.temp ?? null;
+    const weatherMain = data.weather?.[0]?.main?.toLowerCase() || "";
+    const temperature = data.main?.temp ?? null;
 
-    setTemp(t);
+    setTemp(temperature);
 
-    if (w.includes("rain")) setWeather(["sateinen"]);
-    else if (w.includes("cloud")) setWeather(["pilvinen"]);
+    if (weatherMain.includes("rain")) setWeather(["sateinen"]);
+    else if (weatherMain.includes("cloud")) setWeather(["pilvinen"]);
     else setWeather(["aurinkoinen"]);
   }
 
@@ -85,8 +90,6 @@ export default function Conditions() {
       </View>
 
       <ScrollView contentContainerStyle={globalStyles.scrollContainer}>
-
-        {/* VALEA BOXI ALKAA */}
         <View
           style={{
             backgroundColor: "rgba(255,255,255,0.85)",
@@ -96,13 +99,12 @@ export default function Conditions() {
             width: "100%",
           }}
         >
-
           {/* Veden väri */}
           <MultiSelectPicker
             title="Veden väri"
             options={WATER_COLOR_OPTIONS}
             values={waterColor}
-            onChange={(v) => setWaterColor([v[v.length - 1]])}
+            onChange={(v) => selectSingle(v, setWaterColor)}
           />
 
           {/* Kohdekala */}
@@ -110,7 +112,7 @@ export default function Conditions() {
             title="Kohdekala"
             options={FISH_OPTIONS}
             values={targetFish}
-            onChange={(v) => setTargetFish([v[v.length - 1]])}
+            onChange={(v) => selectSingle(v, setTargetFish)}
           />
 
           {/* Sää */}
@@ -118,7 +120,7 @@ export default function Conditions() {
             title="Sää"
             options={WEATHER_OPTIONS}
             values={weather}
-            onChange={(v) => setWeather([v[v.length - 1]])}
+            onChange={(v) => selectSingle(v, setWeather)}
           />
 
           {/* Vesistön tyyppi */}
@@ -126,7 +128,7 @@ export default function Conditions() {
             title="Vesistön tyyppi"
             options={WATER_TYPE_OPTIONS}
             values={waterType}
-            onChange={(v) => setWaterType([v[v.length - 1]])}
+            onChange={(v) => selectSingle(v, setWaterType)}
           />
 
           {/* Lämpötila */}
@@ -163,10 +165,7 @@ export default function Conditions() {
           >
             <Text style={{ fontSize: 16 }}>Etsi paras uistin</Text>
           </Pressable>
-
         </View>
-        {/* VALEA BOXI LOPPUU */}
-
       </ScrollView>
     </ImageBackground>
   );

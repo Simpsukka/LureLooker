@@ -17,8 +17,13 @@ import MultiSelectPicker from "../components/MultiSelectPicker";
 import { useLureContext } from "../src/context/LureContext";
 import { globalStyles } from "../src/styles";
 
+// Uudet apufunktiot
+import { buildLureObject } from "../src/utils/buildLureObject";
+import { normalizeImage } from "../src/utils/normalizeImage";
+import { validateLure } from "../src/utils/validateLure";
+
 const FISH_OPTIONS = ["hauki", "ahven", "kuha", "lohi", "taimen"];
-const WATER_OPTIONS = ["järvi", "joki", "meri","lampi"];
+const WATER_OPTIONS = ["järvi", "joki", "meri", "lampi"];
 const TYPE_OPTIONS = ["jigi", "lippa", "vaappu", "lusikka"];
 
 export default function AddLure() {
@@ -27,7 +32,7 @@ export default function AddLure() {
   const [imageUri, setImageUri] = useState(null);
   const [name, setName] = useState("");
   const [colors, setColors] = useState([]);
-  const [type, setType] = useState([]); // lista
+  const [type, setType] = useState([]);
   const [targetFish, setTargetFish] = useState([]);
   const [waterTypes, setWaterTypes] = useState([]);
 
@@ -50,30 +55,23 @@ export default function AddLure() {
   }
 
   async function onSave() {
-    if (!name.trim()) {
-      alert("Anna uistimelle nimi.");
+    // Yhteinen validointi
+    const error = validateLure({ name, type, color: colors });
+    if (error) {
+      alert(error);
       return;
     }
 
-    if (type.length === 0) {
-      alert("Valitse vähintään yksi uistimen tyyppi.");
-      return;
-    }
-
-    if (colors.length === 0) {
-      alert("Valitse vähintään yksi väri.");
-      return;
-    }
-
-    const newLure = {
+    // Rakennetaan uistinobjekti yhdellä funktiolla
+    const newLure = buildLureObject({
       id: Date.now().toString(),
       name,
       imageUri,
-      type,          // lista
+      type,
       color: colors,
       targetFish,
       waterTypes,
-    };
+    });
 
     await addLure(newLure);
     router.push("/");
@@ -86,6 +84,7 @@ export default function AddLure() {
     >
       <View style={globalStyles.backgroundOverlay} pointerEvents="none" />
 
+      {/* Takaisin */}
       <View style={globalStyles.topRightIcon}>
         <Ionicons
           name="arrow-forward-circle-outline"
@@ -96,7 +95,6 @@ export default function AddLure() {
       </View>
 
       <ScrollView contentContainerStyle={globalStyles.container}>
-
         <View
           style={{
             backgroundColor: "rgba(255,255,255,0.85)",
@@ -106,11 +104,10 @@ export default function AddLure() {
             width: "100%",
           }}
         >
-
           {/* KUVA */}
           {imageUri && (
             <Image
-              source={{ uri: imageUri }}
+              source={normalizeImage(imageUri)}
               style={{
                 width: 160,
                 height: 160,
@@ -147,7 +144,7 @@ export default function AddLure() {
           {/* Värit */}
           <ColorPicker values={colors} onChange={setColors} />
 
-          {/* Uistimen tyyppi MultiSelectPickerillä */}
+          {/* Uistimen tyyppi */}
           <MultiSelectPicker
             title="Uistimen tyyppi"
             options={TYPE_OPTIONS}
@@ -184,9 +181,7 @@ export default function AddLure() {
           >
             <Text style={{ fontSize: 16 }}>Tallenna</Text>
           </Pressable>
-
         </View>
-
       </ScrollView>
     </ImageBackground>
   );

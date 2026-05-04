@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 
+// Kaikki valittavat värit
 const AVAILABLE_COLORS = [
   "punainen",
   "sininen",
@@ -12,7 +13,7 @@ const AVAILABLE_COLORS = [
   "kulta",
 ];
 
-// Pieni apufunktio värien taustaväreille
+// Värien heksakoodit
 const COLOR_MAP = {
   punainen: "#d62828",
   sininen: "#1d4ed8",
@@ -25,15 +26,16 @@ const COLOR_MAP = {
   kulta: "#d4af37",
 };
 
-export default function ColorPicker({ values, onChange }) {
-  function toggleColor(color) {
-    if (values.includes(color)) {
-      onChange(values.filter((c) => c !== color));
-    } else {
-      onChange([...values, color]);
-    }
+// Yhteinen toggle-funktio
+function toggleValue(list, value, onChange) {
+  if (list.includes(value)) {
+    onChange(list.filter((v) => v !== value));
+  } else {
+    onChange([...list, value]);
   }
+}
 
+export default function ColorPicker({ values, onChange }) {
   return (
     <View style={{ marginVertical: 10 }}>
       <Text style={{ fontSize: 16, marginBottom: 6 }}>Värit</Text>
@@ -45,7 +47,7 @@ export default function ColorPicker({ values, onChange }) {
           return (
             <Pressable
               key={color}
-              onPress={() => toggleColor(color)}
+              onPress={() => toggleValue(values, color, onChange)}
               style={{
                 paddingVertical: 6,
                 paddingHorizontal: 10,

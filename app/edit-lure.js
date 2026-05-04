@@ -17,19 +17,20 @@ import MultiSelectPicker from "../components/MultiSelectPicker";
 import { useLureContext } from "../src/context/LureContext";
 import { globalStyles } from "../src/styles";
 
+// Uudet apufunktiot
+import { buildLureObject } from "../src/utils/buildLureObject";
+import { normalizeImage } from "../src/utils/normalizeImage";
+import { validateLure } from "../src/utils/validateLure";
+
 const FISH_OPTIONS = ["hauki", "ahven", "kuha", "lohi", "taimen"];
 const WATER_OPTIONS = ["järvi", "joki", "meri", "lampi"];
 const TYPE_OPTIONS = ["jigi", "lippa", "vaappu", "lusikka"];
 
 export default function EditLure() {
   const { id } = useLocalSearchParams();
-
-  //Korjattu id käsittely
   const lureId = String(id);
 
   const { lures, addLure, deleteLure } = useLureContext();
-
-  // Korjattu find()
   const existing = lures.find((l) => String(l.id) === lureId);
 
   const [imageUri, setImageUri] = useState(null);
@@ -74,30 +75,23 @@ export default function EditLure() {
       return;
     }
 
-    if (!name.trim()) {
-      alert("Anna uistimelle nimi.");
+    // Yhteinen validointi
+    const error = validateLure({ name, type, color: colors });
+    if (error) {
+      alert(error);
       return;
     }
 
-    if (type.length === 0) {
-      alert("Valitse vähintään yksi uistimen tyyppi.");
-      return;
-    }
-
-    if (colors.length === 0) {
-      alert("Valitse vähintään yksi väri.");
-      return;
-    }
-
-    const updated = {
-      id: lureId,   
+    // Rakennetaan päivitetty uistinobjekti
+    const updated = buildLureObject({
+      id: lureId,
       name,
       imageUri,
       type,
       color: colors,
       targetFish,
       waterTypes,
-    };
+    });
 
     await addLure(updated);
     router.push("/");
@@ -128,6 +122,7 @@ export default function EditLure() {
     >
       <View style={globalStyles.backgroundOverlay} pointerEvents="none" />
 
+      {/* Takaisin */}
       <View style={globalStyles.topRightIcon}>
         <Ionicons
           name="arrow-forward-circle-outline"
@@ -138,8 +133,6 @@ export default function EditLure() {
       </View>
 
       <ScrollView contentContainerStyle={globalStyles.container}>
-
-        {/* VALEA BOXI */}
         <View
           style={{
             backgroundColor: "rgba(255,255,255,0.85)",
@@ -149,15 +142,10 @@ export default function EditLure() {
             width: "100%",
           }}
         >
-
           {/* KUVA */}
           {imageUri && (
             <Image
-              source={
-                typeof imageUri === "string"
-                  ? { uri: imageUri }
-                  : imageUri
-              }
+              source={normalizeImage(imageUri)}
               style={{
                 width: 160,
                 height: 160,
@@ -232,7 +220,7 @@ export default function EditLure() {
             <Text style={{ fontSize: 16 }}>Tallenna muutokset</Text>
           </Pressable>
 
-          {/* POISTA NAPPI */}
+          {/* POISTA */}
           <Pressable
             onPress={onDelete}
             style={{
@@ -245,7 +233,6 @@ export default function EditLure() {
           >
             <Text style={{ fontSize: 16, color: "#fff" }}>Poista uistin</Text>
           </Pressable>
-
         </View>
       </ScrollView>
     </ImageBackground>

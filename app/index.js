@@ -18,10 +18,14 @@ export default function Index() {
   const { lures } = useLureContext();
   const [search, setSearch] = useState("");
 
-  // Suodatetut uistimet
+  // Suodatus
   const filteredLures = lures.filter((l) =>
     l.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  function clearSearch() {
+    setSearch("");
+  }
 
   return (
     <ImageBackground
@@ -75,10 +79,8 @@ export default function Index() {
             borderColor: "#ccc",
           }}
         >
-          {/* Suurennuslasi */}
           <Ionicons name="search" size={20} color="#555" style={{ marginRight: 8 }} />
 
-          {/* Tekstikenttä */}
           <TextInput
             placeholder="Hae uistinta nimellä..."
             placeholderTextColor="#777"
@@ -91,9 +93,8 @@ export default function Index() {
             }}
           />
 
-          {/* Tyhjennysnappi (X) */}
           {search.length > 0 && (
-            <Pressable onPress={() => setSearch("")}>
+            <Pressable onPress={clearSearch}>
               <Ionicons name="close-circle" size={22} color="#777" />
             </Pressable>
           )}

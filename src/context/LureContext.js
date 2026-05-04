@@ -1,5 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { getLures, saveLures, deleteLure as storageDelete } from "../storage/lureStorage";
+import {
+  getLures,
+  saveLures,
+  deleteLure as storageDelete,
+} from "../storage/lureStorage";
 
 const LureContext = createContext();
 
@@ -7,6 +11,9 @@ export function LureProvider({ children }) {
   const [lures, setLures] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  /* ---------------------------------------------------
+     Lataa uistimet tallennuksesta
+  --------------------------------------------------- */
   async function loadLures() {
     setLoading(true);
     const data = await getLures();
@@ -14,34 +21,47 @@ export function LureProvider({ children }) {
     setLoading(false);
   }
 
-  // Lisää tai päivitä uistin
+  /* ---------------------------------------------------
+     Lisää tai päivitä uistin
+  --------------------------------------------------- */
   async function addLure(lure) {
     setLures((prev) => {
-      const exists = prev.find((l) => l.id === lure.id);
+      const id = String(lure.id);
+      const exists = prev.some((l) => String(l.id) === id);
 
-      let newList;
-      if (exists) {
-        newList = prev.map((l) => (l.id === lure.id ? lure : l));
-      } else {
-        newList = [...prev, lure];
-      }
+      const updatedList = exists
+        ? prev.map((l) => (String(l.id) === id ? lure : l))
+        : [...prev, lure];
 
-      saveLures(newList);
-      return newList;
+      // Tallennus
+      saveLures(updatedList);
+
+      return updatedList;
     });
   }
 
-  // Poista uistin
+  /* ---------------------------------------------------
+     Poista uistin
+  --------------------------------------------------- */
   async function deleteLure(id) {
+    const idStr = String(id);
+
     setLures((prev) => {
-      const newList = prev.filter((l) => l.id !== id);
-      saveLures(newList);
-      return newList;
+      const updatedList = prev.filter((l) => String(l.id) !== idStr);
+
+      // Tallennus
+      saveLures(updatedList);
+
+      return updatedList;
     });
 
-    await storageDelete(id);
+    // Poista myös tallennuksesta
+    await storageDelete(idStr);
   }
 
+  /* ---------------------------------------------------
+     Lataa uistimet käynnistyksessä
+  --------------------------------------------------- */
   useEffect(() => {
     loadLures();
   }, []);

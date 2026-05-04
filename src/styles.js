@@ -1,25 +1,43 @@
 import { StyleSheet } from "react-native";
 
 export const globalStyles = StyleSheet.create({
-  
+
+  /* ---------------------------------------------------
+     LAYOUT-KONTEINERIT
+  --------------------------------------------------- */
+
+  // ScrollView:n contentContainerStyle
   scrollContainer: {
     flexGrow: 1,
     width: "100%",
-    paddingHorizontal: "10%",  
-    paddingTop: "10%",         
-    paddingBottom: "10%",      
+    paddingHorizontal: "8%",
+    paddingTop: "8%",
+    paddingBottom: "12%",
     alignItems: "center",
   },
 
-  // Yleinen container (Index, Result, AddLure, EditLure)
+  // Yleinen container (Add, Edit, Result)
   container: {
     flexGrow: 1,
     width: "100%",
-    paddingHorizontal: "10%",  
-    paddingTop: "10%",
-    paddingBottom: "10%",
+    paddingHorizontal: "8%",
+    paddingTop: "8%",
+    paddingBottom: "12%",
     alignItems: "center",
   },
+
+  // Index-sivun listalle (vähemmän marginaalia)
+  listContainer: {
+    flexGrow: 1,
+    width: "100%",
+    paddingHorizontal: "4%",
+    paddingTop: "4%",
+    paddingBottom: "8%",
+  },
+
+  /* ---------------------------------------------------
+     TEKSTIT
+  --------------------------------------------------- */
 
   title: {
     fontSize: 22,
@@ -40,6 +58,10 @@ export const globalStyles = StyleSheet.create({
     textShadowRadius: 2,
   },
 
+  /* ---------------------------------------------------
+     INPUTIT & KUVAT
+  --------------------------------------------------- */
+
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -58,6 +80,10 @@ export const globalStyles = StyleSheet.create({
     resizeMode: "cover",
   },
 
+  /* ---------------------------------------------------
+     TAUSTA
+  --------------------------------------------------- */
+
   backgroundImage: {
     flex: 1,
     width: "100%",
@@ -70,6 +96,10 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.35)",
     zIndex: -1,
   },
+
+  /* ---------------------------------------------------
+     UI-ELEMENTIT
+  --------------------------------------------------- */
 
   buttonWrapper: {
     alignItems: "center",
@@ -86,13 +116,4 @@ export const globalStyles = StyleSheet.create({
     right: 20,
     zIndex: 10,
   },
-
-  listContainer: {
-    flexGrow: 1,
-    width: "100%",
-    paddingHorizontal: "4%",
-    paddingTop: "4%",
-    paddingBottom: "4%",
-  },
-
 });
