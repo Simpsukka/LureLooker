@@ -55,7 +55,7 @@ export default function AddLure() {
   }
 
   async function onSave() {
-    // Yhteinen validointi
+    /* Yhteinen validointi */
     const error = validateLure({ name, type, color: colors });
     if (error) {
       alert(error);

@@ -3,9 +3,7 @@ import { TEST_LURES } from "../data/TEST_LURES";
 
 const LURES_KEY = "lures";
 
-/* ---------------------------------------------------
-   1. JSON-apufunktiot
---------------------------------------------------- */
+/* JSON-apufunktiot */
 
 async function saveJSON(key, value) {
   try {
@@ -25,9 +23,7 @@ async function loadJSON(key) {
   }
 }
 
-/* ---------------------------------------------------
-   2. cleanLure — varmistaa datan oikean muodon
---------------------------------------------------- */
+/* cleanLure varmistaa datan oikean muodon */
 
 function cleanLure(l) {
   return {
@@ -41,9 +37,7 @@ function cleanLure(l) {
   };
 }
 
-/* ---------------------------------------------------
-   3. getLures — lataa tallennetut uistimet
---------------------------------------------------- */
+/* getLures lataa tallennetut uistimet */
 
 export async function getLures() {
   const stored = await loadJSON(LURES_KEY);
@@ -57,9 +51,7 @@ export async function getLures() {
   return TEST_LURES.map(cleanLure);
 }
 
-/* ---------------------------------------------------
-   4. saveLures — tallentaa koko listan
---------------------------------------------------- */
+/* saveLures tallentaa koko listan */
 
 export async function saveLures(lures) {
   try {
@@ -70,9 +62,7 @@ export async function saveLures(lures) {
   }
 }
 
-/* ---------------------------------------------------
-   5. deleteLure — poistaa yhden uistimen
---------------------------------------------------- */
+/* deleteLure poistaa yhden uistimen */
 
 export async function deleteLure(id) {
   try {

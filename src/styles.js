@@ -2,9 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const globalStyles = StyleSheet.create({
 
-  /* ---------------------------------------------------
-     LAYOUT-KONTEINERIT
-  --------------------------------------------------- */
+  /* LAYOUT-KONTEINERIT */
 
   // ScrollView:n contentContainerStyle
   scrollContainer: {
@@ -35,9 +33,7 @@ export const globalStyles = StyleSheet.create({
     paddingBottom: "8%",
   },
 
-  /* ---------------------------------------------------
-     TEKSTIT
-  --------------------------------------------------- */
+  /* TEKSTIT */
 
   title: {
     fontSize: 22,
@@ -58,9 +54,7 @@ export const globalStyles = StyleSheet.create({
     textShadowRadius: 2,
   },
 
-  /* ---------------------------------------------------
-     INPUTIT & KUVAT
-  --------------------------------------------------- */
+  /* INPUTIT & KUVAT */
 
   input: {
     borderWidth: 1,
@@ -80,9 +74,7 @@ export const globalStyles = StyleSheet.create({
     resizeMode: "cover",
   },
 
-  /* ---------------------------------------------------
-     TAUSTA
-  --------------------------------------------------- */
+  /* TAUSTA */
 
   backgroundImage: {
     flex: 1,
@@ -97,9 +89,7 @@ export const globalStyles = StyleSheet.create({
     zIndex: -1,
   },
 
-  /* ---------------------------------------------------
-     UI-ELEMENTIT
-  --------------------------------------------------- */
+  /* UI-ELEMENTIT */
 
   buttonWrapper: {
     alignItems: "center",

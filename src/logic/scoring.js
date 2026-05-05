@@ -10,9 +10,7 @@ export function scoreLure(lure, targetFish, waterColor, weather) {
   let score = 0;
   let explanation = [];
 
-  /* -----------------------------
-     1. Kohdekala
-  ----------------------------- */
+  /* Kohdekala */
   if (targetFish) {
     if (lure.targetFish.includes(targetFish)) {
       score += 30;
@@ -28,9 +26,7 @@ export function scoreLure(lure, targetFish, waterColor, weather) {
     }
   }
 
-  /* -----------------------------
-     2. Veden väri
-  ----------------------------- */
+  /* Veden väri */
   if (waterColor) {
     const matches = lure.color.filter((c) =>
       waterColorRules[waterColor]?.includes(c)
@@ -52,9 +48,7 @@ export function scoreLure(lure, targetFish, waterColor, weather) {
     }
   }
 
-  /* -----------------------------
-     3. Sää
-  ----------------------------- */
+  /* Sää */
   if (weather) {
     const matches = lure.color.filter((c) =>
       weatherRules[weather]?.includes(c)
@@ -76,9 +70,7 @@ export function scoreLure(lure, targetFish, waterColor, weather) {
     }
   }
 
-  /* -----------------------------
-     4. Uistimen tyyppi
-  ----------------------------- */
+  /* Uistimen tyyppi */
   if (Array.isArray(lure.type)) {
     const matches = lure.type.filter((t) => typeRules.includes(t));
 
@@ -93,9 +85,7 @@ export function scoreLure(lure, targetFish, waterColor, weather) {
     }
   }
 
-  /* -----------------------------
-     5. Vesityyppi + kohdekala
-  ----------------------------- */
+  /* Vesityyppi + kohdekala */
   if (targetFish) {
     for (const [water, fishList] of Object.entries(waterTypeRules)) {
       if (lure.waterTypes.includes(water) && fishList.includes(targetFish)) {
@@ -108,9 +98,7 @@ export function scoreLure(lure, targetFish, waterColor, weather) {
     }
   }
 
-  /* -----------------------------
-     6. Monivärisyys
-  ----------------------------- */
+  /* Monivärisyys */
   if (lure.color.length >= 3) {
     score += 5;
     explanation.push({

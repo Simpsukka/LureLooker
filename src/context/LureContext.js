@@ -11,9 +11,7 @@ export function LureProvider({ children }) {
   const [lures, setLures] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  /* ---------------------------------------------------
-     Lataa uistimet tallennuksesta
-  --------------------------------------------------- */
+  /* Lataa uistimet tallennuksesta */
   async function loadLures() {
     setLoading(true);
     const data = await getLures();
@@ -21,9 +19,7 @@ export function LureProvider({ children }) {
     setLoading(false);
   }
 
-  /* ---------------------------------------------------
-     Lisää tai päivitä uistin
-  --------------------------------------------------- */
+  /* Lisää tai päivitä uistin */
   async function addLure(lure) {
     setLures((prev) => {
       const id = String(lure.id);
@@ -33,23 +29,21 @@ export function LureProvider({ children }) {
         ? prev.map((l) => (String(l.id) === id ? lure : l))
         : [...prev, lure];
 
-      // Tallennus
+      /* Tallennus */
       saveLures(updatedList);
 
       return updatedList;
     });
   }
 
-  /* ---------------------------------------------------
-     Poista uistin
-  --------------------------------------------------- */
+  /* Poista uistin */
   async function deleteLure(id) {
     const idStr = String(id);
 
     setLures((prev) => {
       const updatedList = prev.filter((l) => String(l.id) !== idStr);
 
-      // Tallennus
+      /* Tallennus */
       saveLures(updatedList);
 
       return updatedList;
@@ -59,9 +53,8 @@ export function LureProvider({ children }) {
     await storageDelete(idStr);
   }
 
-  /* ---------------------------------------------------
-     Lataa uistimet käynnistyksessä
-  --------------------------------------------------- */
+  /* Lataa uistimet käynnistyksessä */
+  
   useEffect(() => {
     loadLures();
   }, []);

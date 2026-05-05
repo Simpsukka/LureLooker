@@ -73,9 +73,8 @@ export default function LureCard({ lure, onPress }) {
   );
 }
 
-/* ----------------------------- */
-/*   PIENET APUKOMPONENTIT       */
-/* ----------------------------- */
+
+/* PIENET APUKOMPONENTIT */ 
 
 function InfoRow({ label, children }) {
   return (
@@ -94,9 +93,7 @@ function Tag({ text }) {
   );
 }
 
-/* ----------------------------- */
-/*   TYYLIT                      */
-/* ----------------------------- */
+  /* TYYLIT */                    
 
 const styles = StyleSheet.create({
   card: {
